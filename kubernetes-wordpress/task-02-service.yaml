@@ -1,0 +1,18 @@
+# create a service for wordpress
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  # TODO: write your code here
+  selector:
+    app: wordpress
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 31000
+      

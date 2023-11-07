@@ -1,0 +1,52 @@
+---
+- name: Check replica replication status
+  community.mysql.mysql_replication:
+    mode: getreplica
+    login_unix_socket: "{{ mariadb_unix_socket }}"
+  register: replica
+  no_log: true
+
+# # Keeping this for the record
+# # See https://github.com/ansible/ansible/pull/62648
+# - name: Configure replication on the replica
+#   ansible.builtin.command: |
+#     /usr/bin/mariadb -e "CHANGE MASTER TO master_host='{{ mariadb_replication_master_ip }}',
+#     master_user='{{ item.name }}', master_password='{{ item.password }}', master_use_gtid=slave_pos"
+#   loop: "{{ mariadb_replication_user }}"
+#   when:
+#     - not replica.Is_Replica
+#   no_log: true
+
+- name: Configure replication on the replica
+  community.mysql.mysql_replication:
+    mode: changeprimary
+    primary_host: "{{ mariadb_replication_primary_ip }}"
+    primary_user: "{{ item.name }}"
+    primary_password: "{{ item.password }}"
+    primary_use_gtid: "{{ mariadb_replication_gtid | default('replica_pos') }}"
+    login_unix_socket: "{{ mariadb_unix_socket }}"
+  loop: "{{ mariadb_replication_user }}"
+  when:
+    - not replica.Is_Replica
+  no_log: true
+
+- name: Reset replica replication
+  community.mysql.mysql_replication:
+    mode: resetreplica
+    login_unix_socket: "{{ mariadb_unix_socket }}"
+  when:
+    - not replica.Is_Replica
+
+- name: Check replica replication status (second time)
+  community.mysql.mysql_replication:
+    mode: getreplica
+    login_unix_socket: "{{ mariadb_unix_socket }}"
+  register: replica2
+  no_log: true
+
+- name: Start replica replication
+  community.mysql.mysql_replication:
+    mode: startreplica
+    login_unix_socket: "{{ mariadb_unix_socket }}"
+  when:
+    - replica2.Slave_IO_Running == "No"

@@ -1,0 +1,31 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: fauust
+  role_name: mariadb
+  description: MariaDB server for Linux.
+  license: license GPL-3.0-only
+  min_ansible_version: "2.8"
+  github_branch: main
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+        - sid
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+        - jammy
+    - name: Fedora
+      versions:
+        - all
+    - name: EL
+      versions:
+        - 8
+        - 9
+  galaxy_tags:
+    - mariadb
+    - mysql

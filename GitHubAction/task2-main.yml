@@ -1,0 +1,31 @@
+name: CI Maven Project
+
+on: 
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    
+  workflow_dispatch:
+  
+# Set App port for testing
+env:
+  APP_PORT: 5000
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java: [ '8', '11', '17' ] # Testing against different Java versions
+    name: Java ${{ matrix.Java }} sample
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - run: mvn test
+      

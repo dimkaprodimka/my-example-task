@@ -1,0 +1,40 @@
+version: '2.2'
+
+services:
+  webapp:
+    build:  
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: webapp
+
+  redis:
+    image: redis:latest
+    restart: always
+    container_name: redis
+    
+
+  prometheus:
+    image: grafchitaru/prometeus:latest
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    ports:
+      - 9090:9090
+    container_name: prometheus
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: always
+    container_name: cadvisor
+
+networks:
+  webapp:
+    external: true
+    name: webapp
+                        

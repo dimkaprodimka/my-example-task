@@ -1,0 +1,16 @@
+---
+mariadb_bind_address: 0.0.0.0
+mariadb_use_official_repo: true
+mariadb_use_official_repo_url: https://deb.mariadb.org
+mariadb_use_official_repo_version: "11.0"
+mariadb_users:
+- name: "{{ db_user }}"
+  host: '%'
+  password: "{{ db_pass }}"
+  priv: "{{ db_name }}.*:ALL"
+  state: present
+mariadb_databases:
+- name: "{{ db_name }}"
+  collation: utf8_general_ci
+  encoding: utf8
+  replicate: false

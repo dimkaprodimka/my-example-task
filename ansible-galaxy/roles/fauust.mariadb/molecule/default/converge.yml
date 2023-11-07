@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  vars_files: vars/testvars.yml
+
+  roles:
+    - role: ansible-role-mariadb

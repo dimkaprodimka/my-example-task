@@ -1,0 +1,25 @@
+---
+driver:
+  name: podman
+platforms:
+  - name: instance
+    image: "fauust/docker-ansible:${MOLECULE_DISTRO:-debian-11}"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    override_command: false
+    pre_build_image: true
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_GATHERING: explicit
+    ANSIBLE_FORCE_COLOR: true
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+verifier:
+  name: ansible
+scenario:
+  test_sequence:
+    - create
+    - converge
+    - idempotence
+    - verify

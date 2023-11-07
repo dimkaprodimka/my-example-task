@@ -1,0 +1,47 @@
+---
+- name: Load OS-specific vars
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+      paths:
+        - "vars"
+
+- name: Include task setup_debian.yml
+  ansible.builtin.import_tasks: setup_debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Include task setup_redhat.yml
+  ansible.builtin.import_tasks: setup_redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Include task configure.yml
+  ansible.builtin.import_tasks: configure.yml
+
+- name: Include task databases.yml
+  ansible.builtin.import_tasks: databases.yml
+  when:
+    - mariadb_databases is defined
+    - mariadb_replication_role != "replica"
+
+- name: Include task users.yml
+  ansible.builtin.import_tasks: users.yml
+  when:
+    - mariadb_users is defined
+    - mariadb_replication_role != "replica"
+
+- name: Include task replication_primary.yml
+  ansible.builtin.import_tasks: replication_primary.yml
+  when: mariadb_replication_role == "primary"
+
+- name: Include task replication_replica.yml
+  ansible.builtin.import_tasks: replication_replica.yml
+  when:
+    - not ansible_check_mode
+    - mariadb_replication_role == "replica"
+
+- name: Include task backup.yml
+  ansible.builtin.import_tasks: backup.yml
+  when: mariadb_backup_db

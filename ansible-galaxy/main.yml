@@ -1,0 +1,17 @@
+---
+- name: Apply db roles
+  hosts: db
+  become: yes
+  vars_files:
+    - group_vars/db_vars.yml
+  roles:
+    - db
+
+- name: Apply server role
+  hosts: server
+  become: yes
+  vars_files:
+    - group_vars/server_vars.yml
+    - group_vars/db_vars.yml
+  roles:
+    - server
