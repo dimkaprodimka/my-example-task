@@ -1,0 +1,16 @@
+instance_image_id = tolist([
+  tolist([
+    "ubuntu-os-cloud/ubuntu-2204-lts",
+  ]),
+])
+instance_network = "projects/terraform-397915/global/networks/development"
+instance_public_ip = tolist([
+  tolist([
+    "34.118.68.255",
+  ]),
+])
+instance_subnet = tolist([
+  "https://www.googleapis.com/compute/v1/projects/terraform-397915/regions/europe-central2/subnetworks/development",
+])
+instance_type = "e2-micro"
+instance_zone = "europe-central2-a"

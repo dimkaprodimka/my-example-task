@@ -1,0 +1,9 @@
+azure_os_disk_name = tolist([
+  "osdisk",
+])
+azure_vm_location = "eastus"
+azure_vm_name = "dof01"
+public_ip_address = "20.102.65.171"
+resource_group_name = "rgditerraform"
+tls_private_key = <sensitive>
+vm_size = "Standard_B1ls"
